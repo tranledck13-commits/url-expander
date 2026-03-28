@@ -9,6 +9,8 @@ export default async (req, res) => {
   }
 
   try {
+    console.log('📍 Gọi API với URL:', url);
+
     // Gọi API AddLiveTag
     const apiUrl = `https://data.addlivetag.com/product-data/product-data.php?url=${encodeURIComponent(url)}`;
     
@@ -22,8 +24,9 @@ export default async (req, res) => {
     });
 
     const data = await response.json();
+    console.log('📦 Response:', JSON.stringify(data).substring(0, 200));
 
-    // Kiểm tra dữ liệu từ AddLiveTag
+    // Kiểm tra dữ liệu
     if (data.status === 'success' && data.productInfo) {
       const info = data.productInfo;
       return res.status(200).json({
@@ -32,22 +35,20 @@ export default async (req, res) => {
           productName: info.productName || 'N/A',
           imageUrl: info.imageUrl || '',
           itemId: info.itemId || '',
-          price: info.price || 0,
-          sales: info.sales || 0,
-          rating: info.rating || '0',
-          shopName: info.shopName || 'N/A',
         },
       });
     } else {
+      console.log('❌ Dữ liệu không hợp lệ:', data);
       return res.status(400).json({
         success: false,
-        error: data.message || 'Không tìm thấy thông tin sản phẩm',
+        error: data.message || 'Không tìm thấy sản phẩm hoặc link không hợp lệ',
       });
     }
   } catch (err) {
+    console.error('💥 Lỗi:', err.message);
     return res.status(500).json({
       success: false,
-      error: err.message || 'Lỗi khi lấy thông tin sản phẩm',
+      error: `Lỗi: ${err.message}`,
     });
   }
 };
