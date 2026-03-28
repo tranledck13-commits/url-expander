@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Expander - Mở Rộng Link Ngắn</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-label {
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .result-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            word-break: break-all;
+            color: #333;
+            font-size: 14px;
+            border-left: 4px solid #667eea;
+        }
+
+        .copy-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .error {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 URL Expander</h1>
+        
+        <div class="form-group">
+            <label for="urlInput">Nhập link ngắn:</label>
+            <input 
+                type="text" 
+                id="urlInput" 
+                placeholder="Ví dụ: https://s.shopee.vn/4VU2IjQjPF"
+            >
+        </div>
+
+        <button id="expandBtn">Mở Rộng Link</button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Đang xử lý...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="result" id="result">
+            <div class="result-label">📌 Link Gốc:</div>
+            <div class="result-box" id="resultUrl"></div>
+            <button class="copy-btn" id="copyBtn">📋 Sao Chép</button>
+        </div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const expandBtn = document.getElementById('expandBtn');
+        const result = document.getElementById('result');
+        const resultUrl = document.getElementById('resultUrl');
+        const error = document.getElementById('error');
+        const loading = document.getElementById('loading');
+        const copyBtn = document.getElementById('copyBtn');
+
+        expandBtn.addEventListener('click', async () => {
+            const shortUrl = urlInput.value.trim();
+
+            // Kiểm tra input
+            if (!shortUrl) {
+                showError('⚠️ Vui lòng nhập một URL!');
+                return;
+            }
+
+            // Reset
+            result.classList.remove('show');
+            error.classList.remove('show');
+            loading.classList.add('show');
+            expandBtn.disabled = true;
+
+            try {
+                // Gọi API
+                const response = await fetch('/api/expand', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: shortUrl })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Lỗi từ server');
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultUrl.textContent = data.expandedUrl;
+                    result.classList.add('show');
+                } else {
+                    showError(data.error || '❌ Không thể mở rộng link');
+                }
+            } catch (err) {
+                showError('❌ Có lỗi xảy ra: ' + err.message);
+            } finally {
+                loading.classList.remove('show');
+                expandBtn.disabled = false;
+            }
+        });
+
+        copyBtn.addEventListener('click', () => {
+            const url = resultUrl.textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                copyBtn.textContent = '✅ Đã sao chép!';
+                setTimeout(() => {
+                    copyBtn.textContent = '📋 Sao Chép';
+                }, 2000);
+            });
+        });
+
+        // Enter key
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') expandBtn.click();
+        });
+
+        function showError(message) {
+            error.textContent = message;
+            error.classList.add('show');
+        }
+    </script>
+</body>
+</html>
