@@ -9,39 +9,39 @@ export default async (req, res) => {
   }
 
   try {
-    // Gọi API AddLiveTag để lấy thông tin sản phẩm
+    // Gọi API AddLiveTag
     const apiUrl = `https://data.addlivetag.com/product-data/product-data.php?url=${encodeURIComponent(url)}`;
     
     const response = await fetch(apiUrl, {
+      method: 'GET',
       headers: {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/json',
       },
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(10000),
     });
-
-    if (!response.ok) {
-      return res.status(response.status).json({
-        success: false,
-        error: 'Không thể lấy thông tin sản phẩm',
-      });
-    }
 
     const data = await response.json();
 
-    // Kiểm tra dữ liệu
-    if (data.productName && data.imageUrl && data.itemId) {
+    // Kiểm tra dữ liệu từ AddLiveTag
+    if (data.status === 'success' && data.productInfo) {
+      const info = data.productInfo;
       return res.status(200).json({
         success: true,
         data: {
-          productName: data.productName,
-          imageUrl: data.imageUrl,
-          itemId: data.itemId,
+          productName: info.productName || 'N/A',
+          imageUrl: info.imageUrl || '',
+          itemId: info.itemId || '',
+          price: info.price || 0,
+          sales: info.sales || 0,
+          rating: info.rating || '0',
+          shopName: info.shopName || 'N/A',
         },
       });
     } else {
       return res.status(400).json({
         success: false,
-        error: 'Không tìm thấy thông tin sản phẩm',
+        error: data.message || 'Không tìm thấy thông tin sản phẩm',
       });
     }
   } catch (err) {
