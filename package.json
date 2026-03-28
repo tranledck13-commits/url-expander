@@ -1,0 +1,13 @@
+{
+  "name": "url-expander",
+  "version": "1.0.0",
+  "description": "Mở rộng short URL",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel"
+  },
+  "keywords": ["url", "expander"],
+  "author": "",
+  "license": "MIT"
+}
