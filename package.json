@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "url-expander",
   "version": "1.0.0",
   "description": "Công cụ mở rộng link ngắn",
