@@ -12,66 +12,263 @@
       min-height: 100vh;
       padding: 20px;
     }
-    .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-    h1 { color: #333; margin-bottom: 25px; text-align: center; }
+    .container { 
+      max-width: 1400px; 
+      margin: 0 auto; 
+      background: white; 
+      padding: 30px; 
+      border-radius: 12px; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
+    }
+    h1 { 
+      color: #333; 
+      margin-bottom: 25px; 
+      text-align: center; 
+      font-size: 28px;
+    }
     .input-section { margin-bottom: 30px; }
-    textarea { width: 100%; height: 120px; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical; }
-    textarea:focus { outline: none; border-color: #667eea; }
-    .button-group { display: flex; gap: 10px; margin-top: 15px; }
-    button { padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
-    .btn-primary { background: #667eea; color: white; flex: 1; }
-    .btn-primary:hover { background: #5568d3; transform: translateY(-2px); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-download-all { background: #28a745; color: white; }
-    .btn-download-all:hover { background: #218838; }
-    .status { margin-top: 15px; padding: 12px; border-radius: 8px; text-align: center; display: none; }
+    label { 
+      display: block; 
+      margin-bottom: 10px; 
+      font-weight: 600; 
+      color: #333; 
+      font-size: 15px;
+    }
+    textarea { 
+      width: 100%; 
+      height: 120px; 
+      padding: 12px; 
+      border: 2px solid #ddd; 
+      border-radius: 8px; 
+      font-size: 14px; 
+      resize: vertical;
+      font-family: 'Courier New', monospace;
+      transition: border 0.3s;
+    }
+    textarea:focus { 
+      outline: none; 
+      border-color: #667eea; 
+      box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+    }
+    .button-group { 
+      display: flex; 
+      gap: 10px; 
+      margin-top: 15px; 
+      flex-wrap: wrap;
+    }
+    button { 
+      padding: 12px 24px; 
+      border: none; 
+      border-radius: 8px; 
+      font-size: 16px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      transition: all 0.3s;
+      min-height: 44px;
+    }
+    .btn-primary { 
+      background: #667eea; 
+      color: white; 
+      flex: 1;
+      min-width: 150px;
+    }
+    .btn-primary:hover { 
+      background: #5568d3; 
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    .btn-primary:disabled { 
+      opacity: 0.6; 
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-download-all { 
+      background: #28a745; 
+      color: white;
+      min-width: 150px;
+    }
+    .btn-download-all:hover { 
+      background: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+    .btn-download-all:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .status { 
+      margin-top: 15px; 
+      padding: 15px; 
+      border-radius: 8px; 
+      text-align: center; 
+      display: none;
+      font-weight: 500;
+      animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .status.show { display: block; }
     .status.loading { background: #e3f2fd; color: #1976d2; }
     .status.success { background: #e8f5e9; color: #388e3c; }
     .status.error { background: #ffebee; color: #c62828; }
 
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+    .stats {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      flex: 1;
+      min-width: 150px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: #667eea;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+
+    .products-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+      gap: 20px; 
+      margin-top: 30px; 
+    }
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+    
     .product-card {
       background: #f9f9f9;
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
     }
-    .product-card:hover { transform: translateY(-5px); }
-    .product-image { width: 100%; height: 200px; object-fit: cover; background: #e0e0e0; }
-    .product-info { padding: 15px; }
-    .product-name { font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px; line-height: 1.4; }
-    .product-id { color: #999; font-size: 12px; margin-bottom: 12px; }
+    .product-card:hover { 
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .product-image { 
+      width: 100%; 
+      height: 220px; 
+      object-fit: cover; 
+      background: #e0e0e0;
+      display: block;
+    }
+    .product-info { 
+      padding: 15px; 
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-name { 
+      font-weight: 600; 
+      color: #333; 
+      margin-bottom: 8px; 
+      font-size: 13px; 
+      line-height: 1.4;
+      min-height: 32px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .product-id { 
+      color: #999; 
+      font-size: 11px; 
+      margin-bottom: 10px;
+      word-break: break-all;
+    }
+    .product-details {
+      font-size: 12px; 
+      color: #666; 
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .product-details div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .product-shop {
+      color: #667eea;
+      font-weight: 500;
+    }
     .product-link { 
       display: block; 
       width: 100%; 
       padding: 8px; 
-      background: #e0e0e0; 
-      color: #333; 
+      background: #e8f1ff; 
+      color: #667eea; 
       text-decoration: none; 
       border-radius: 4px; 
       text-align: center; 
-      font-size: 12px; 
-      margin-bottom: 8px; 
-      word-break: break-all; 
-      max-height: 40px; 
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      transition: all 0.3s;
+      word-break: break-all;
+      max-height: 50px;
       overflow-y: auto;
     }
+    .product-link:hover {
+      background: #667eea;
+      color: white;
+    }
+    .product-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
     .btn-download { 
-      width: 100%; 
-      padding: 8px; 
+      flex: 1;
+      padding: 8px 12px;
       background: #667eea; 
       color: white; 
       border: none; 
       border-radius: 4px; 
       cursor: pointer; 
-      font-size: 13px; 
+      font-size: 12px; 
       font-weight: 600;
+      transition: all 0.3s;
     }
-    .btn-download:hover { background: #5568d3; }
+    .btn-download:hover { 
+      background: #5568d3;
+      transform: translateY(-1px);
+    }
 
-    .empty-state { text-align: center; color: #999; padding: 40px; }
+    .empty-state { 
+      text-align: center; 
+      color: #999; 
+      padding: 60px 20px;
+      grid-column: 1 / -1;
+    }
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
@@ -79,26 +276,44 @@
     <h1>📦 Lấy Thông Tin Sản Phẩm Hàng Loạt</h1>
 
     <div class="input-section">
-      <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">
-        Dán các link (mỗi dòng một link):
-      </label>
-      <textarea id="urlsInput" placeholder="Ví dụ:&#10;https://s.shopee.vn/abc&#10;https://s.shopee.vn/xyz&#10;https://shopee.vn/..."></textarea>
+      <label>Dán các link sản phẩm (mỗi dòng một link):</label>
+      <textarea id="urlsInput" placeholder="Ví dụ:&#10;https://shopee.vn/product/38003654/1589295236&#10;https://s.shopee.vn/abc123&#10;https://shopee.vn/..."></textarea>
       
       <div class="button-group">
         <button class="btn-primary" id="processBtn" onclick="processUrls()">🔄 Xử Lý</button>
-        <button class="btn-download-all" id="downloadAllBtn" onclick="downloadAllImages()" style="display: none;">⬇️ Tải Tất Cả</button>
+        <button class="btn-download-all" id="downloadAllBtn" onclick="downloadAllImages()" style="display: none;">⬇️ Tải Tất Cả Ảnh</button>
       </div>
     </div>
 
     <div class="status" id="status"></div>
 
+    <div class="stats" id="stats" style="display: none;">
+      <div class="stat-item">
+        <div class="stat-number" id="totalCount">0</div>
+        <div class="stat-label">Tổng Link</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="successCount">0</div>
+        <div class="stat-label">Thành Công</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="failCount">0</div>
+        <div class="stat-label">Thất Bại</div>
+      </div>
+    </div>
+
     <div class="products-grid" id="productsGrid">
-      <div class="empty-state">Nhập link và click "Xử Lý" để bắt đầu</div>
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <div>Nhập link sản phẩm và click "🔄 Xử Lý" để bắt đầu</div>
+      </div>
     </div>
   </div>
 
   <script>
     let products = [];
+    let totalUrls = 0;
+    let failedUrls = 0;
 
     async function processUrls() {
       const urls = document.getElementById('urlsInput').value.trim().split('\n').filter(u => u.trim());
@@ -109,30 +324,38 @@
       }
 
       products = [];
+      totalUrls = urls.length;
+      failedUrls = 0;
+      
       showStatus(`⏳ Đang xử lý ${urls.length} link...`, 'loading');
       document.getElementById('processBtn').disabled = true;
       document.getElementById('downloadAllBtn').style.display = 'none';
+      document.getElementById('stats').style.display = 'flex';
 
       for (let i = 0; i < urls.length; i++) {
         const url = urls[i].trim();
-        showStatus(`⏳ Đang xử lý link ${i + 1}/${urls.length}...`, 'loading');
+        updateStatus(`⏳ Xử lý link ${i + 1}/${urls.length}...`);
         
         try {
-          // Bước 1: Mở rộng link (nếu là short URL)
+          // Bước 1: Kiểm tra và mở rộng link (nếu là short URL)
           let expandedUrl = url;
-          if (url.includes('s.shopee') || url.includes('bit.ly') || url.includes('tinyurl')) {
-            const expandRes = await fetch('/api/expand', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ url })
-            });
-            const expandData = await expandRes.json();
-            if (expandData.success) {
-              expandedUrl = expandData.expandedUrl;
+          if (url.includes('s.shopee') || url.includes('bit.ly') || url.includes('tinyurl') || url.includes('shorturl')) {
+            try {
+              const expandRes = await fetch('/api/expand', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+              });
+              const expandData = await expandRes.json();
+              if (expandData.success) {
+                expandedUrl = expandData.expandedUrl;
+              }
+            } catch (e) {
+              console.warn('Không thể mở rộng link, sử dụng URL gốc');
             }
           }
 
-          // Bước 2: Lấy thông tin sản phẩm
+          // Bước 2: Lấy thông tin sản phẩm từ API
           const productRes = await fetch('/api/get-product-data', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -140,20 +363,23 @@
           });
           const productData = await productRes.json();
 
-          if (productData.success) {
+          if (productData.success && productData.data) {
             products.push(productData.data);
           } else {
-            console.error(`Lỗi: ${productData.error}`);
+            failedUrls++;
+            console.error(`Lỗi link ${i + 1}: ${productData.error}`);
           }
         } catch (err) {
-          console.error(`Lỗi xử lý link: ${err.message}`);
+          failedUrls++;
+          console.error(`Lỗi xử lý link ${i + 1}: ${err.message}`);
         }
 
-        // Delay nhẹ để không quá tải
-        await new Promise(r => setTimeout(r, 500));
+        // Delay nhẹ để không quá tải server
+        await new Promise(r => setTimeout(r, 800));
       }
 
       displayProducts();
+      updateStats();
       showStatus(`✅ Hoàn thành! Lấy được ${products.length}/${urls.length} sản phẩm`, 'success');
       document.getElementById('processBtn').disabled = false;
       
@@ -162,22 +388,46 @@
       }
     }
 
+    function updateStatus(message) {
+      document.getElementById('status').textContent = message;
+    }
+
+    function updateStats() {
+      document.getElementById('totalCount').textContent = totalUrls;
+      document.getElementById('successCount').textContent = products.length;
+      document.getElementById('failCount').textContent = failedUrls;
+    }
+
     function displayProducts() {
       const grid = document.getElementById('productsGrid');
       
       if (products.length === 0) {
-        grid.innerHTML = '<div class="empty-state">Không tìm thấy sản phẩm nào</div>';
+        grid.innerHTML = `<div class="empty-state">
+          <div class="empty-state-icon">😢</div>
+          <div>Không tìm thấy sản phẩm nào</div>
+        </div>`;
         return;
       }
 
       grid.innerHTML = products.map((product, idx) => `
         <div class="product-card">
-          <img src="${product.imageUrl}" alt="${product.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/250x200?text=No+Image'">
+          <img src="${product.imageUrl}" alt="${product.productName}" class="product-image" onerror="this.src='https://via.placeholder.com/280x220?text=No+Image'">
           <div class="product-info">
-            <div class="product-name">${product.productName}</div>
-            <div class="product-id">ID: ${product.itemId}</div>
-            <a href="${product.imageUrl}" target="_blank" class="product-link">📎 Xem link</a>
-            <button class="btn-download" onclick="downloadImage('${product.imageUrl}', '${product.itemId}')">⬇️ Tải ảnh</button>
+            <div class="product-name" title="${product.productName}">${product.productName}</div>
+            <div class="product-id">🆔 ${product.itemId}</div>
+            
+            <div class="product-details">
+              ${product.shopName ? `<div><span class="product-shop">${product.shopName}</span></div>` : ''}
+              ${product.price ? `<div>💰 ${product.price.toLocaleString('vi-VN')}₫</div>` : ''}
+              ${product.sales ? `<div>📊 Bán: ${product.sales.toLocaleString('vi-VN')}</div>` : ''}
+              ${product.rating ? `<div>⭐ ${product.rating}</div>` : ''}
+            </div>
+
+            <a href="${product.imageUrl}" target="_blank" class="product-link" title="Mở link ảnh">📎 Xem ảnh</a>
+            
+            <div class="product-actions">
+              <button class="btn-download" onclick="downloadImage('${product.imageUrl}', '${product.itemId}')">⬇️ Tải</button>
+            </div>
           </div>
         </div>
       `).join('');
@@ -200,12 +450,12 @@
 
       for (let i = 0; i < products.length; i++) {
         const product = products[i];
-        showStatus(`⏳ Đang tải ảnh ${i + 1}/${products.length}...`, 'loading');
+        updateStatus(`⏳ Đang tải ảnh ${i + 1}/${products.length}...`);
         
         downloadImage(product.imageUrl, product.itemId);
         
         // Delay giữa các lần tải
-        await new Promise(r => setTimeout(r, 300));
+        await new Promise(r => setTimeout(r, 400));
       }
 
       showStatus(`✅ Tải xong ${products.length} ảnh!`, 'success');
